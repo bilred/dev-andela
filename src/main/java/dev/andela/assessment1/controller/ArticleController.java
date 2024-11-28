@@ -20,15 +20,19 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * DONE
- * 1- Align with REST best practices (e.g., using Location headers and proper status codes).
- * 2 -Handle edge cases gracefully (e.g., non-existing resources or invalid input).
- * 3- Improve maintainability (e.g., better update logic and validation).
- * 4- Scale effectively (e.g., add pagination).
- * 5- Add Swagger or OpenAPI annotations to generate API documentation. This will make it easier to use and share your endpoints.
+ * DONE - IN A NUTSHELL
+ * 0- Design-first approach (Size of the resource & Role in the orchestration, Endpoint path, interface in/out object, )
+ * 0.1- Spring IO initializer, (java, spring version, Library need Data-Source, Spring Web, JPA, Bean @Validator, Swagger-ui / OpenAPI-doc, ..., Spring Test, Security, )
+ * 1.0- Align with REST best practices (e.g., using Location headers and proper status codes),
+ * 1.1- Handle edge cases gracefully (e.g., non-existing resources or invalid input),
+ * 1.2- Improve maintainability (e.g., better update logic and validation), @ControllerAdvice, @ExceptionHandler
+ * 1.3- Scale effectively (e.g., add pagination).
+ * 1.4- Add Swagger or OpenAPI annotations to generate API documentation. This will make it easier to use and share your endpoints.
  *
  * TODO
- * 6- Ensure you have integration tests for each endpoint to validate behavior, including edge cases like invalid input or non-existing IDs
+ * - why will be good to add DTO with record
+ * 2- Ensure you have integration tests for each endpoint to validate behavior, including edge cases like invalid input or non-existing IDs
+ * Q1- What is the differance btw @RestController and @Controller?
  */
 
 @RestController
