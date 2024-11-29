@@ -1,0 +1,371 @@
+https://www.linkedin.com/company/andela/
+https://talent.andela.com
+https://www.qualified.io/assess/642f28c1da83de001349d238/review?redirectUrl=https:~2F~2Ftalent.andela.com~2Fcertification&invite=Qh7YdDkArNNbRw
+https://www.qualified.io/assess/642f28c1da83de001349d238/review?invite=Qh7YdDkArNNbRw
+///////////////////////////////////////////////////////////////////////////////////////
+JSON Articles Controller
+In this challenge we're going to continue building on the JSON articles controller with create, update and delete endpoints.
+
+Endpoints
+We'll need to handle the following three endpoints.
+
+Description
+
+POST /articles - For adding a new Article.
+PUT /articles/{id} - For updating a particular article's body or title.
+DELETE /articles/{id} - For removing an Article.
++
+add the method getAll and getById in the contrler as endpoint
+
+Response
+
+The POST endpoint should return the new Article with an id assigned to it by the ArticleService.
+
+Both the PUT and DELETE endpoints should return a 204 status code upon successful completion of their action. If there is no resource to be found, only the PUT method should return a 404 status code.
+
+Article Service
+The controller will have access to the ArticleService through which it can obtain articles.
+The necessary public methods on the ArticleService are described below:
+
+@Service
+class ArticleService {
+    // will retrieve all articles stored
+    public List<Article> getAll();
+    // will use the id to find an article with the same id
+    // if none is found, it will return null
+    public Article findById(int id);
+    // stores a new article and assigns it a unique id
+    public Article add(Article article);
+    // removes an article by its id
+    public void remove(int id);
+    // takes an updated article and stores it
+    public void update(Article updated);
+}
+Article Model
+The Article model has three properties with getters and setters for each:
+
+Title (String) - getTitle/setTitle
+Body (String) - getBody/setBody
+Id (int) - getId/setId
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Sure, here's the updated controller with additional endpoints for retrieving all articles and getting an article by its ID:
+
+```java
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/articles")
+public class ArticleController {
+
+    private final ArticleService service;
+
+    public ArticleController(ArticleService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Article>> getAllArticles() {
+        List<Article> articles = service.getAll();
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Article> getArticleById(@PathVariable int id) {
+        Article article = service.findById(id);
+        if (article != null) {
+            return new ResponseEntity<>(article, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Article> createArticle(@RequestBody Article article) {
+        Article createdArticle = service.add(article);
+        return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateArticle(@PathVariable int id, @RequestBody Article article) {
+        Article existingArticle = service.findById(id);
+        if (existingArticle == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        article.setId(id);
+        service.update(article);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable int id) {
+        service.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}
+```
+
+With these additional endpoints, you can now retrieve all articles with a `GET` request to `/articles` and retrieve a specific 
+article by its ID with a `GET` request to `/articles/{id}`. Both endpoints return `200 OK` if the operation is successful and `404 Not Found` if the requested resource is not found.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Count Lines of Code
+The number of lines of code in a program's source code is one of the most fundamental (and, perhaps, most easily misunderstood) metrics for analyzing its complexity.
+
+In this challenge, write a function CountLOC.count to count the lines of code in a Java source file. A line of code is defined as any line in the source which contains at least one character of executable code. This excludes comments and whitespace. All input will be valid Java code in string format.
+
+CountLOC.count(text)
+Parameters
+text: String - A stringified valid Java source file
+
+Return Value
+int - A count of the number of lines of executable code in the source file
+
+Java comment syntax
+Java comments are identical to those in JavaScript, C, C++ and C# and follow one of two formats:
+
+int i = 42;  // this is a single-line comment
+and
+
+int i = 42; /* this is a 
+               multiline comment */
+Java string syntax
+Java has simple string syntax which does not include templates or multiline strings. Strings are double-quote (") delimited and cannot span more than a single line. Characters are single-quote (') delimited and contain a single character with optional blackslash escape character, as in '\n'. Comments which are part of strings should be disregarded by your line of code counter.
+
+Examples
+Example 1
+Consider the following Java source code (a "Hello world" program):
+
+public class Example1 {
+    public static void main(String[] args) {
+        System.out.println("Hello world");
+    }
+}
+If CountLOC.count(sourceText) was called with this source file's content as a string, it should return 5 since there are no empty lines or comments in the program.
+
+Example 2
+public class Example2 {
+    public static void main(String[] args) {
+
+        // say hello
+        System.out.println("Hello world!");
+    }
+}
+Here, CountLOC.count(sourceText) should still return 5. The two lines which were added are a line entirely consisting of whitespace and a line containing a comment. Neither of the added lines contain executable code.
+
+Example 3
+public class Example3 {
+    public static void main(String[] args) {
+        System.out.println("Hello world"); // say hello
+    }
+}
+Yet again, our function should return 5. The line containing the comment also has code in it, so we can count it.
+
+Example 4
+/**
+ * A hello world program
+*/
+
+public class Example4 {
+    public static void main(String[] args /* grab args */) {
+        System.out.println("/*Hello world"); // say hello
+    }
+}
+Even with multiline comments and a quoted multiline comment start sequence, this code still only has 5 lines.
+
+Example 5
+/*
+ /****//*
+ A hello world program
+ *\/
+*/// -----------------
+class Example5 {
+    public static void main(String[] args) { 
+        System.out./*  */println("/*\"Hello world")
+            ;
+///*
+    }
+/* // */ }
+This final example is a stress test! CountLOC.count(sourceText) should return 6 (lines 6-9 and 11-12).
+
+plus here is my junit : package countloc;
+
+import java.io.*;
+import java.nio.file.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class CandidateTest {
+    @Test
+    public void shouldWorkOnYourCustomTest() throws IOException {
+      
+        /* This file will not be submitted--feel free to 
+           experiment and write tests here as you wish. */
+      
+        String path = "./src/test/java/countloc/fixtures/Example1.java";
+        String code = new String(Files.readAllBytes(Paths.get(path)));
+        assertEquals(5, CountLOC.count(code));
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+Here's a Java implementation of the `CountLOC.count` function:
+
+```java
+public class CountLOC {
+    public static int count(String text) {
+        String[] lines = text.split("\\r?\\n");
+        int loc = 0;
+
+        for (String line : lines) {
+            line = line.trim();
+            if (!line.isEmpty() && !line.startsWith("//") && !line.startsWith("/*")) {
+                loc++;
+            }
+        }
+
+        return loc;
+    }
+}
+```
+
+This function splits the input text into lines, trims each line to remove leading and trailing whitespace,
+ and then checks if the line is not empty and does not start with `//` or `/*`, which indicates a comment.
+ If the line meets these criteria, it is counted as a line of executable code. Finally, it returns the total count of such lines.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Which of the following statements about inheritance in Java is true?
+Which of the following is NOT a valid Java identifier?
+Which of the following is the main advantage of using generics in Java? =>  type safety, code reusability, and elimination of casting ...  Open/Closed Principle and Adapter Design Pattern
+
+What is the output of the following code snippet?
+int[] arr = {1, 2, 3, 4, 5, 6};
+int sum = 0;
+for (int i = 0; i < arr.length; i++) {
+  sum += arr[i++];
+}
+System.out.println(sum); => 9
+
+Which of the following are examples of a built-in functional interfaces in Java?
+Runnable X
+Stream   
+Predicate X
+Serializable
+
+What is the output of the following code snippet? 20
+List<List<Integer>> numbers = Arrays.asList(
+        Arrays.asList(1, 2, 3),
+        Arrays.asList(4, 5),
+        Arrays.asList(6, 7, 8, 9)
+);
+int sum = numbers.stream()
+        .flatMap(List::stream)
+        .filter(n -> n % 2 == 0)
+        .collect(Collectors.summingInt(Integer::intValue));
+System.out.println(sum);
+
+
+Consider the following code snippet:
+Runnable task = () -> {
+    // Code to be executed by the thread
+};
+Which of the following statements is a valid way to create a thread to execute the task?
+Thread t = new Thread(task);      => and this too! X
+
+Thread t = new Thread(task::run);  X
+
+Thread t = Thread.start(task)
+
+Thread t = new Thread() {  X
+  public void run() {
+    task.run();
+  }
+};
+
+
+8- Consider the following code snippet, which contains a race condition:
+public class Counter {
+    private int count;
+
+    public void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+Counter c = new Counter();
+
+Thread t1 = new Thread(() -> {
+    for (int i = 0; i < 100000; i++) {
+        c.increment();
+    }
+});
+
+Thread t2 = new Thread(() -> {
+    for (int i = 0; i < 100000; i++) {
+        c.increment();
+    }
+});
+
+t1.start();
+t2.start();
+
+What are the possible ways to solve the race condition in the Counter class?
+Use a thread-local variable to hold the count value to avoid the race condition   
+Use a Semaphore to ensure mutual exclusion when accessing the count variable      X
+Add the volatile keyword to count instance variable to ensure the value is properly synchronized
+Add the synchronized keyword in the method Counter.increment to prevent multiple threads from accessing the count variable at the same time X
+
+.9 What is the output of the following code snippet? Mr. Mary
+Map<Integer, String> map = new HashMap<>();
+map.put(1, "John");
+map.put(2, "Mary");
+map.put(3, "Bob");
+map.replaceAll((key, value) -> "Mr. " + value);
+System.out.println(map.get(2));
+
+10. Consider the following code snippet, which defines a Pair class the type parameters, T and U:
+class Pair<T, U> {
+  private final T first;
+  private final U second;
+
+  public Pair(T first, U second) {
+    this.first = first;
+    this.second = second;
+  }
+
+  public T getFirst() {
+    return first;
+  }
+
+  public U getSecond() {
+    return second;
+  }
+
+  public static void main(String[] args) {
+    Pair<String, Integer> pair1 = new Pair<>("foo", 42);
+    Pair<String, Integer> pair2 = new Pair<>("bar", 99);
+
+    Pair<Integer, Integer> sumPair = addPairs(pair1, pair2);
+    System.out.println(sumPair.getFirst() + sumPair.getSecond());
+  }
+
+  public static <T extends Number, U extends Number> Pair<T, U> addPairs(
+        Pair<T, U> p1, Pair<T, U> p2) {
+    T sum1 = p1.getFirst().intValue() + p2.getFirst().intValue();
+    U sum2 = p1.getSecond().intValue() + p2.getSecond().intValue();
+    return new Pair<>(sum1, sum2);
+  }
+}
+
+What will be the output of running this code, and why?
+The output will be "141", because the addPairs() method returns a Pair object with the sum of the Integer values in the two input Pair objects.
+The code will fail to compile because the addPairs() method requires that the generic type parameters T and U extend the Number class, but String does not. X
+The code will fail to compile, because the addPairs() method should return a Pair<Integer, Integer> object, but it returns a Pair<T, U> object instead.  
+The code will compile and run without errors, but the output will be "foo42bar99" because the + operator concatenates String values instead of adding them.
